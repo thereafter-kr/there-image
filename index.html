@@ -10,9 +10,9 @@
 /* ===== RESET & BASE ===== */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#0a0a0a;--card:#1a1a1a;--border:#2a2a2a;
-  --text:#e0e0e0;--sub:#888;--mute:#555;
-  --gold:#c8a97e;--gold-h:#dfc49e;--silver:#a0a0a0;--bronze:#8b6914;
+  --bg:#9e9583;--card:#d9d3c7;--card-h:#e0dbd0;--border:#b5ad9e;
+  --text:#333333;--sub:#666666;--mute:#7a7265;
+  --gold:#d4782f;--gold-h:#e08a42;--silver:#7a7265;--bronze:#b5ad9e;
   --radius:8px;--transition:0.3s ease;
 }
 html{scroll-behavior:smooth}
@@ -29,8 +29,8 @@ header{
   text-align:center;padding:32px 16px 0;
   border-bottom:1px solid var(--border);
 }
-header h1{font-size:1.8rem;font-weight:700;color:var(--gold);letter-spacing:0.05em}
-header .sub{font-size:0.8rem;color:var(--sub);margin-top:2px;letter-spacing:0.1em;font-weight:300}
+header h1{font-size:1.8rem;font-weight:700;color:#333333;letter-spacing:0.05em}
+header .sub{font-size:0.8rem;color:var(--mute);margin-top:2px;letter-spacing:0.1em;font-weight:300}
 
 /* ===== NAV TABS ===== */
 nav{
@@ -54,11 +54,12 @@ nav button{
   border-bottom:2px solid transparent;
   white-space:nowrap;font-family:inherit;
 }
-nav button.active{color:var(--gold);border-bottom-color:var(--gold)}
+nav button.active{color:#333333;border-bottom-color:var(--gold)}
 nav button:hover{color:var(--text)}
 @media(max-width:768px){
   nav button{border-bottom:none;border-top:2px solid transparent;padding:10px 4px;font-size:0.7rem}
-  nav button.active{border-top-color:var(--gold)}
+  nav button{color:var(--mute)}
+  nav button.active{color:#333333;border-top-color:var(--gold)}
 }
 
 /* ===== SECTIONS ===== */
@@ -74,7 +75,7 @@ nav button:hover{color:var(--text)}
   transition:all var(--transition);font-family:inherit;
 }
 .filter-btn:hover{border-color:var(--gold);color:var(--text)}
-.filter-btn.active{background:var(--gold);color:#0a0a0a;border-color:var(--gold);font-weight:600}
+.filter-btn.active{background:var(--gold);color:#fff;border-color:var(--gold);font-weight:600}
 
 /* ===== CARDS ===== */
 .card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
@@ -83,7 +84,7 @@ nav button:hover{color:var(--text)}
   background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
   padding:20px;cursor:pointer;transition:all var(--transition);position:relative;
 }
-.card:hover{transform:translateY(-2px);border-color:#3a3a3a;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.card:hover{transform:translateY(-2px);background:var(--card-h);border-color:#a09888;box-shadow:0 4px 20px rgba(0,0,0,0.08)}
 .card .num{font-size:1.4rem;margin-right:8px;opacity:0.7}
 .card .name{font-size:1rem;font-weight:600;color:var(--text)}
 .card .structure{font-size:0.8rem;color:var(--sub);margin-top:6px}
@@ -91,9 +92,9 @@ nav button:hover{color:var(--text)}
   display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.65rem;font-weight:700;
   margin-left:8px;vertical-align:middle;
 }
-.badge.tier-a{background:rgba(200,169,126,0.2);color:var(--gold);border:1px solid var(--gold)}
-.badge.tier-b{background:rgba(160,160,160,0.15);color:var(--silver);border:1px solid var(--silver)}
-.badge.tier-c{background:rgba(139,105,20,0.15);color:var(--bronze);border:1px solid var(--bronze)}
+.badge.tier-a{background:rgba(212,120,47,0.12);color:var(--gold);border:1px solid var(--gold)}
+.badge.tier-b{background:rgba(122,114,101,0.12);color:var(--silver);border:1px solid var(--silver)}
+.badge.tier-c{background:rgba(181,173,158,0.15);color:#8a8070;border:1px solid var(--bronze)}
 .stars{font-size:0.7rem;margin-left:4px}
 
 /* ===== ACCORDION DETAIL ===== */
@@ -106,13 +107,13 @@ nav button:hover{color:var(--text)}
 .detail-label{font-size:0.7rem;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
 .detail-text{font-size:0.82rem;color:var(--sub);line-height:1.7}
 .detail-code{
-  background:#111;border:1px solid var(--border);border-radius:6px;
-  padding:10px 14px;font-family:'Fira Code',monospace;font-size:0.78rem;color:var(--gold);
+  background:#c8c0b2;border:1px solid var(--border);border-radius:6px;
+  padding:10px 14px;font-family:'Fira Code',monospace;font-size:0.78rem;color:#5a3e1a;
   word-break:break-all;margin-top:4px;
 }
 .tag{
   display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.68rem;
-  background:rgba(200,169,126,0.1);color:var(--gold);border:1px solid rgba(200,169,126,0.2);
+  background:rgba(212,120,47,0.1);color:#b0611e;border:1px solid rgba(212,120,47,0.25);
   margin:3px 4px 3px 0;
 }
 
@@ -123,7 +124,7 @@ nav button:hover{color:var(--text)}
   background:var(--card);color:var(--sub);cursor:pointer;font-family:inherit;
   font-size:0.85rem;font-weight:500;transition:all var(--transition);
 }
-.finder-mode button.active{border-color:var(--gold);color:var(--gold)}
+.finder-mode button.active{border-color:var(--gold);color:var(--gold);background:rgba(212,120,47,0.06)}
 
 .flow-box{
   background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
@@ -138,8 +139,8 @@ nav button:hover{color:var(--text)}
   font-size:0.9rem;font-weight:500;transition:all var(--transition);
 }
 .flow-btns button.yes{border-color:var(--gold);color:var(--gold)}
-.flow-btns button.yes:hover{background:var(--gold);color:#0a0a0a}
-.flow-btns button.no:hover{background:#333}
+.flow-btns button.yes:hover{background:var(--gold);color:#fff}
+.flow-btns button.no:hover{background:#c8c0b2}
 
 .result-card{
   background:var(--card);border:1px solid var(--gold);border-radius:var(--radius);
@@ -148,7 +149,7 @@ nav button:hover{color:var(--text)}
 .result-card .rc-title{font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:8px}
 .result-card .rc-desc{font-size:0.85rem;color:var(--sub);margin-bottom:16px;line-height:1.6}
 .go-gen-btn{
-  padding:10px 20px;background:var(--gold);color:#0a0a0a;border:none;border-radius:var(--radius);
+  padding:10px 20px;background:var(--gold);color:#fff;border:none;border-radius:var(--radius);
   font-weight:600;cursor:pointer;font-family:inherit;font-size:0.85rem;transition:all var(--transition);
 }
 .go-gen-btn:hover{background:var(--gold-h)}
@@ -157,10 +158,10 @@ nav button:hover{color:var(--text)}
   width:100%;padding:12px 16px;background:var(--card);border:1px solid var(--border);
   border-radius:var(--radius);color:var(--text);font-family:inherit;font-size:0.9rem;
   cursor:pointer;appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237a7265'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
   background-repeat:no-repeat;background-position:right 14px center;
 }
-.type-select option{background:#1a1a1a;color:#e0e0e0}
+.type-select option{background:var(--card);color:var(--text)}
 
 .rec-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:16px}
 .rec-card{
@@ -180,16 +181,16 @@ nav button:hover{color:var(--text)}
 }
 .status-num{font-size:1.6rem;font-weight:700}
 .status-label{font-size:0.7rem;color:var(--sub);margin-top:2px}
-.status-item.done .status-num{color:#4caf50}
-.status-item.wip .status-num{color:#ff9800}
+.status-item.done .status-num{color:#5a8a4a}
+.status-item.wip .status-num{color:var(--gold)}
 .status-item.todo .status-num{color:var(--mute)}
 
 .dist-chart{margin-bottom:24px}
 .dist-row{display:flex;align-items:center;margin-bottom:6px}
 .dist-label{width:100px;font-size:0.75rem;color:var(--sub);flex-shrink:0}
-.dist-bar-wrap{flex:1;height:18px;background:#111;border-radius:4px;overflow:hidden}
+.dist-bar-wrap{flex:1;height:18px;background:#c8c0b2;border-radius:4px;overflow:hidden}
 .dist-bar{height:100%;border-radius:4px;transition:width 0.5s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
-.dist-bar span{font-size:0.6rem;font-weight:700;color:#0a0a0a}
+.dist-bar span{font-size:0.6rem;font-weight:700;color:#fff}
 
 .plan-table{width:100%;border-collapse:collapse}
 .plan-table th{
@@ -198,10 +199,10 @@ nav button:hover{color:var(--text)}
   letter-spacing:0.05em;white-space:nowrap;
 }
 .plan-table td{
-  padding:10px 12px;font-size:0.8rem;border-bottom:1px solid #151515;
+  padding:10px 12px;font-size:0.8rem;border-bottom:1px solid var(--border);
   color:var(--sub);vertical-align:middle;
 }
-.plan-table tr:hover td{background:rgba(200,169,126,0.03)}
+.plan-table tr:hover td{background:rgba(212,120,47,0.05)}
 .plan-table .insight-name{color:var(--text);font-weight:500}
 @media(max-width:768px){
   .plan-table-wrap{display:none}
@@ -222,7 +223,7 @@ nav button:hover{color:var(--text)}
 
 /* ===== TAB4: GENERATOR ===== */
 .gen-motto{
-  text-align:center;font-size:1rem;color:var(--gold);font-weight:500;
+  text-align:center;font-size:1rem;color:#5a3e1a;font-weight:500;
   margin-bottom:28px;padding:16px;border:1px solid var(--border);
   border-radius:var(--radius);background:var(--card);font-style:italic;
 }
@@ -231,7 +232,7 @@ nav button:hover{color:var(--text)}
   display:flex;align-items:center;gap:10px;margin-bottom:12px;
 }
 .step-num{
-  width:28px;height:28px;border-radius:50%;background:var(--gold);color:#0a0a0a;
+  width:28px;height:28px;border-radius:50%;background:var(--gold);color:#fff;
   display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;
 }
 .step-title{font-size:0.9rem;font-weight:600}
@@ -242,8 +243,8 @@ nav button:hover{color:var(--text)}
   padding:12px;border:1px solid var(--border);border-radius:var(--radius);
   cursor:pointer;transition:all var(--transition);background:var(--card);
 }
-.tech-opt:hover{border-color:#444}
-.tech-opt.selected{border-color:var(--gold);background:rgba(200,169,126,0.08)}
+.tech-opt:hover{border-color:#a09888}
+.tech-opt.selected{border-color:var(--gold);background:rgba(212,120,47,0.08)}
 .tech-opt .to-num{font-size:1.1rem;margin-right:6px}
 .tech-opt .to-name{font-size:0.85rem;font-weight:500}
 .tech-opt .to-tier{float:right}
@@ -261,11 +262,11 @@ nav button:hover{color:var(--text)}
   background:var(--card);color:var(--sub);cursor:pointer;font-family:inherit;
   font-size:0.8rem;transition:all var(--transition);
 }
-.opt-btn.selected{border-color:var(--gold);color:var(--gold);background:rgba(200,169,126,0.08)}
-.opt-btn:hover{border-color:#444}
+.opt-btn.selected{border-color:var(--gold);color:var(--gold);background:rgba(212,120,47,0.08)}
+.opt-btn:hover{border-color:#a09888}
 
 .generate-btn{
-  width:100%;padding:16px;background:var(--gold);color:#0a0a0a;border:none;
+  width:100%;padding:16px;background:var(--gold);color:#fff;border:none;
   border-radius:var(--radius);font-size:1rem;font-weight:700;cursor:pointer;
   font-family:inherit;transition:all var(--transition);margin-top:8px;
 }
@@ -273,17 +274,17 @@ nav button:hover{color:var(--text)}
 .generate-btn:disabled{opacity:0.4;cursor:not-allowed}
 
 .prompt-result{
-  background:#111;border:1px solid var(--border);border-radius:var(--radius);
+  background:#c8c0b2;border:1px solid var(--border);border-radius:var(--radius);
   padding:20px;margin-top:20px;position:relative;display:none;
 }
 .prompt-result.show{display:block}
 .prompt-result pre{
   white-space:pre-wrap;word-break:break-all;font-size:0.82rem;line-height:1.8;
-  color:var(--gold);font-family:'Fira Code',monospace;
+  color:#5a3e1a;font-family:'Fira Code',monospace;
 }
 .copy-btn{
   position:absolute;top:12px;right:12px;padding:6px 14px;
-  background:var(--gold);color:#0a0a0a;border:none;border-radius:6px;
+  background:var(--gold);color:#fff;border:none;border-radius:6px;
   font-size:0.72rem;font-weight:600;cursor:pointer;font-family:inherit;
 }
 .copy-btn:hover{background:var(--gold-h)}
@@ -294,7 +295,7 @@ nav button:hover{color:var(--text)}
   display:flex;align-items:center;gap:8px;padding:6px 0;
   font-size:0.8rem;color:var(--sub);
 }
-.check-item input[type=checkbox]{accent-color:var(--gold);width:16px;height:16px}
+.check-item input[type=checkbox]{accent-color:var(--gold);width:16px;height:16px;cursor:pointer}
 
 /* ===== FOOTER ===== */
 footer{
@@ -305,7 +306,7 @@ footer{
 /* ===== TOAST ===== */
 #toast{
   position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
-  background:var(--gold);color:#0a0a0a;padding:10px 24px;border-radius:20px;
+  background:var(--gold);color:#fff;padding:10px 24px;border-radius:20px;
   font-size:0.82rem;font-weight:600;opacity:0;transition:all 0.3s ease;
   z-index:999;pointer-events:none;
 }
