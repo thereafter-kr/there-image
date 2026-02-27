@@ -10,11 +10,30 @@
 /* ===== RESET & BASE ===== */
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#9e9583;--card:#d9d3c7;--card-h:#e0dbd0;--border:#b5ad9e;
-  --text:#333333;--sub:#666666;--mute:#7a7265;
-  --gold:#d4782f;--gold-h:#e08a42;--silver:#7a7265;--bronze:#b5ad9e;
+  /* 홈페이지 시스템 섹션과 동일 */
+  --bg:#8e8675;--card:#D8D3BC;--card-h:#E0DCCA;--border:#a89f8a;
+  --text:#2a2a2a;--sub:#4a4a4a;--mute:#5A5845;
+  --gold:#E8913A;--gold-h:#d47e28;--silver:#5A5845;--bronze:#7A7862;
   --radius:8px;--transition:0.3s ease;
 }
+
+/* ===== PASSWORD GATE ===== */
+#gate{
+  position:fixed;inset:0;z-index:9999;
+  background:#867d6a;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+}
+#gate.hidden{display:none}
+#gate h1{font-size:1.6rem;font-weight:700;color:#ece5d5;letter-spacing:0.05em;margin-bottom:4px}
+#gate .gate-sub{font-size:0.8rem;color:#c4b99f;letter-spacing:0.1em;font-weight:300;margin-bottom:32px}
+#gate input{
+  width:260px;padding:14px 18px;background:#c4b99f;border:1px solid #a89f8a;
+  border-radius:8px;color:#2a2520;font-family:inherit;font-size:0.95rem;
+  text-align:center;letter-spacing:0.1em;
+}
+#gate input:focus{outline:none;border-color:#E8913A}
+#gate input::placeholder{color:#7a7264;letter-spacing:0.05em}
+#gate .gate-err{color:#E8913A;font-size:0.78rem;margin-top:12px;min-height:1.2em}
 html{scroll-behavior:smooth}
 body{
   background:var(--bg);color:var(--text);
@@ -29,7 +48,7 @@ header{
   text-align:center;padding:32px 16px 0;
   border-bottom:1px solid var(--border);
 }
-header h1{font-size:1.8rem;font-weight:700;color:#333333;letter-spacing:0.05em}
+header h1{font-size:1.8rem;font-weight:700;color:var(--text);letter-spacing:0.05em}
 header .sub{font-size:0.8rem;color:var(--mute);margin-top:2px;letter-spacing:0.1em;font-weight:300}
 
 /* ===== NAV TABS ===== */
@@ -54,12 +73,12 @@ nav button{
   border-bottom:2px solid transparent;
   white-space:nowrap;font-family:inherit;
 }
-nav button.active{color:#333333;border-bottom-color:var(--gold)}
+nav button.active{color:var(--text);border-bottom-color:var(--gold);font-weight:600}
 nav button:hover{color:var(--text)}
 @media(max-width:768px){
   nav button{border-bottom:none;border-top:2px solid transparent;padding:10px 4px;font-size:0.7rem}
-  nav button{color:var(--mute)}
-  nav button.active{color:#333333;border-top-color:var(--gold)}
+  nav button{color:#7A7862}
+  nav button.active{color:var(--text);border-top-color:var(--gold);font-weight:600}
 }
 
 /* ===== SECTIONS ===== */
@@ -84,7 +103,7 @@ nav button:hover{color:var(--text)}
   background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
   padding:20px;cursor:pointer;transition:all var(--transition);position:relative;
 }
-.card:hover{transform:translateY(-2px);background:var(--card-h);border-color:#a09888;box-shadow:0 4px 20px rgba(0,0,0,0.08)}
+.card:hover{transform:translateY(-2px);background:var(--card-h);border-color:var(--border);box-shadow:0 8px 24px rgba(0,0,0,0.12)}
 .card .num{font-size:1.4rem;margin-right:8px;opacity:0.7}
 .card .name{font-size:1rem;font-weight:600;color:var(--text)}
 .card .structure{font-size:0.8rem;color:var(--sub);margin-top:6px}
@@ -92,9 +111,9 @@ nav button:hover{color:var(--text)}
   display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.65rem;font-weight:700;
   margin-left:8px;vertical-align:middle;
 }
-.badge.tier-a{background:rgba(212,120,47,0.12);color:var(--gold);border:1px solid var(--gold)}
-.badge.tier-b{background:rgba(122,114,101,0.12);color:var(--silver);border:1px solid var(--silver)}
-.badge.tier-c{background:rgba(181,173,158,0.15);color:#8a8070;border:1px solid var(--bronze)}
+.badge.tier-a{background:rgba(232,145,58,0.15);color:#c67a28;border:1px solid #E8913A}
+.badge.tier-b{background:rgba(90,88,69,0.12);color:#4a4235;border:1px solid #5A5845}
+.badge.tier-c{background:rgba(122,120,98,0.12);color:#4a4235;border:1px solid #7A7862}
 .stars{font-size:0.7rem;margin-left:4px}
 
 /* ===== ACCORDION DETAIL ===== */
@@ -104,16 +123,16 @@ nav button:hover{color:var(--text)}
 }
 .card.open .card-detail{max-height:2000px;padding-top:16px;margin-top:12px;border-top-width:1px}
 .detail-section{margin-bottom:14px}
-.detail-label{font-size:0.7rem;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
+.detail-label{font-size:0.7rem;color:#c67a28;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
 .detail-text{font-size:0.82rem;color:var(--sub);line-height:1.7}
 .detail-code{
-  background:#c8c0b2;border:1px solid var(--border);border-radius:6px;
-  padding:10px 14px;font-family:'Fira Code',monospace;font-size:0.78rem;color:#5a3e1a;
+  background:#c4b99f;border:1px solid var(--border);border-radius:6px;
+  padding:10px 14px;font-family:'Fira Code',monospace;font-size:0.78rem;color:#2a2520;
   word-break:break-all;margin-top:4px;
 }
 .tag{
   display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.68rem;
-  background:rgba(212,120,47,0.1);color:#b0611e;border:1px solid rgba(212,120,47,0.25);
+  background:rgba(232,145,58,0.1);color:#c67a28;border:1px solid rgba(232,145,58,0.25);
   margin:3px 4px 3px 0;
 }
 
@@ -124,7 +143,7 @@ nav button:hover{color:var(--text)}
   background:var(--card);color:var(--sub);cursor:pointer;font-family:inherit;
   font-size:0.85rem;font-weight:500;transition:all var(--transition);
 }
-.finder-mode button.active{border-color:var(--gold);color:var(--gold);background:rgba(212,120,47,0.06)}
+.finder-mode button.active{border-color:var(--gold);color:#c67a28;background:rgba(232,145,58,0.08)}
 
 .flow-box{
   background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
@@ -140,13 +159,13 @@ nav button:hover{color:var(--text)}
 }
 .flow-btns button.yes{border-color:var(--gold);color:var(--gold)}
 .flow-btns button.yes:hover{background:var(--gold);color:#fff}
-.flow-btns button.no:hover{background:#c8c0b2}
+.flow-btns button.no:hover{background:#c4b99f}
 
 .result-card{
   background:var(--card);border:1px solid var(--gold);border-radius:var(--radius);
   padding:24px;margin-top:20px;
 }
-.result-card .rc-title{font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:8px}
+.result-card .rc-title{font-size:1.1rem;font-weight:700;color:#c67a28;margin-bottom:8px}
 .result-card .rc-desc{font-size:0.85rem;color:var(--sub);margin-bottom:16px;line-height:1.6}
 .go-gen-btn{
   padding:10px 20px;background:var(--gold);color:#fff;border:none;border-radius:var(--radius);
@@ -167,7 +186,7 @@ nav button:hover{color:var(--text)}
 .rec-card{
   background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;
 }
-.rec-rank{font-size:0.7rem;color:var(--gold);font-weight:600;margin-bottom:6px}
+.rec-rank{font-size:0.7rem;color:#c67a28;font-weight:600;margin-bottom:6px}
 .rec-name{font-size:1rem;font-weight:600;margin-bottom:6px}
 .rec-reason{font-size:0.8rem;color:var(--sub);margin-bottom:14px;line-height:1.5}
 
@@ -188,7 +207,7 @@ nav button:hover{color:var(--text)}
 .dist-chart{margin-bottom:24px}
 .dist-row{display:flex;align-items:center;margin-bottom:6px}
 .dist-label{width:100px;font-size:0.75rem;color:var(--sub);flex-shrink:0}
-.dist-bar-wrap{flex:1;height:18px;background:#c8c0b2;border-radius:4px;overflow:hidden}
+.dist-bar-wrap{flex:1;height:18px;background:#c4b99f;border-radius:4px;overflow:hidden}
 .dist-bar{height:100%;border-radius:4px;transition:width 0.5s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
 .dist-bar span{font-size:0.6rem;font-weight:700;color:#fff}
 
@@ -223,7 +242,7 @@ nav button:hover{color:var(--text)}
 
 /* ===== TAB4: GENERATOR ===== */
 .gen-motto{
-  text-align:center;font-size:1rem;color:#5a3e1a;font-weight:500;
+  text-align:center;font-size:1rem;color:#2a2520;font-weight:500;
   margin-bottom:28px;padding:16px;border:1px solid var(--border);
   border-radius:var(--radius);background:var(--card);font-style:italic;
 }
@@ -243,8 +262,8 @@ nav button:hover{color:var(--text)}
   padding:12px;border:1px solid var(--border);border-radius:var(--radius);
   cursor:pointer;transition:all var(--transition);background:var(--card);
 }
-.tech-opt:hover{border-color:#a09888}
-.tech-opt.selected{border-color:var(--gold);background:rgba(212,120,47,0.08)}
+.tech-opt:hover{border-color:var(--border)}
+.tech-opt.selected{border-color:var(--gold);background:rgba(232,145,58,0.1)}
 .tech-opt .to-num{font-size:1.1rem;margin-right:6px}
 .tech-opt .to-name{font-size:0.85rem;font-weight:500}
 .tech-opt .to-tier{float:right}
@@ -262,8 +281,8 @@ nav button:hover{color:var(--text)}
   background:var(--card);color:var(--sub);cursor:pointer;font-family:inherit;
   font-size:0.8rem;transition:all var(--transition);
 }
-.opt-btn.selected{border-color:var(--gold);color:var(--gold);background:rgba(212,120,47,0.08)}
-.opt-btn:hover{border-color:#a09888}
+.opt-btn.selected{border-color:var(--gold);color:#c67a28;background:rgba(232,145,58,0.1)}
+.opt-btn:hover{border-color:var(--border)}
 
 .generate-btn{
   width:100%;padding:16px;background:var(--gold);color:#fff;border:none;
@@ -274,13 +293,13 @@ nav button:hover{color:var(--text)}
 .generate-btn:disabled{opacity:0.4;cursor:not-allowed}
 
 .prompt-result{
-  background:#c8c0b2;border:1px solid var(--border);border-radius:var(--radius);
+  background:#c4b99f;border:1px solid var(--border);border-radius:var(--radius);
   padding:20px;margin-top:20px;position:relative;display:none;
 }
 .prompt-result.show{display:block}
 .prompt-result pre{
   white-space:pre-wrap;word-break:break-all;font-size:0.82rem;line-height:1.8;
-  color:#5a3e1a;font-family:'Fira Code',monospace;
+  color:#2a2520;font-family:'Fira Code',monospace;
 }
 .copy-btn{
   position:absolute;top:12px;right:12px;padding:6px 14px;
@@ -320,6 +339,13 @@ footer{
 </style>
 </head>
 <body>
+
+<div id="gate">
+  <h1>There Image</h1>
+  <p class="gate-sub">thereafter</p>
+  <input type="password" id="gate-pw" placeholder="비밀번호 입력" autofocus>
+  <p class="gate-err" id="gate-err"></p>
+</div>
 
 <header>
   <h1>There Image</h1>
@@ -899,7 +925,7 @@ function renderDistChart() {
   TECHNIQUES.forEach(t => counts[t.id] = 0);
   PLAN_DATA.forEach(p => { if(counts[p.technique]!==undefined) counts[p.technique]++; });
   const max = Math.max(...Object.values(counts), 1);
-  const colors = {A:'var(--gold)',B:'var(--silver)',C:'var(--bronze)'};
+  const colors = {A:'#E8913A',B:'#867d6a',C:'#a89f8a'};
   document.getElementById('dist-chart').innerHTML = TECHNIQUES.map(t => {
     const cnt = counts[t.id];
     const pct = (cnt/max*100).toFixed(0);
@@ -1041,6 +1067,34 @@ function showToast(msg) {
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2200);
 }
+
+// ===================================================================
+// INIT
+// ===================================================================
+// ===================================================================
+// PASSWORD GATE
+// ===================================================================
+const GATE_PW = 'thereimage2026';
+const gateEl = document.getElementById('gate');
+const gatePwInput = document.getElementById('gate-pw');
+const gateErr = document.getElementById('gate-err');
+
+if (sessionStorage.getItem('ti_auth') === '1') {
+  gateEl.classList.add('hidden');
+}
+
+gatePwInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') {
+    const val = gatePwInput.value.trim();
+    if (val === GATE_PW) {
+      sessionStorage.setItem('ti_auth', '1');
+      gateEl.classList.add('hidden');
+    } else {
+      gateErr.textContent = '접근 권한이 없습니다.';
+      gatePwInput.value = '';
+    }
+  }
+});
 
 // ===================================================================
 // INIT
