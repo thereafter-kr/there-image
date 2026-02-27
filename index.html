@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>There Image — thereafter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ===== RESET & BASE ===== */
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0a;--card:#1a1a1a;--border:#2a2a2a;
+  --text:#e0e0e0;--sub:#888;--mute:#555;
+  --gold:#c8a97e;--gold-h:#dfc49e;--silver:#a0a0a0;--bronze:#8b6914;
+  --radius:8px;--transition:0.3s ease;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Pretendard','Inter',system-ui,sans-serif;
+  line-height:1.6;min-height:100vh;
+  padding-bottom:80px;
+}
+@media(min-width:769px){body{padding-bottom:0}}
+
+/* ===== HEADER ===== */
+header{
+  text-align:center;padding:32px 16px 0;
+  border-bottom:1px solid var(--border);
+}
+header h1{font-size:1.8rem;font-weight:700;color:var(--gold);letter-spacing:0.05em}
+header .sub{font-size:0.8rem;color:var(--sub);margin-top:2px;letter-spacing:0.1em;font-weight:300}
+
+/* ===== NAV TABS ===== */
+nav{
+  display:flex;gap:0;overflow-x:auto;
+  border-bottom:1px solid var(--border);
+  background:var(--bg);
+  position:sticky;top:0;z-index:100;
+}
+@media(max-width:768px){
+  nav{
+    position:fixed;bottom:0;top:auto;left:0;right:0;
+    border-bottom:none;border-top:1px solid var(--border);
+    z-index:200;
+  }
+  body{padding-bottom:64px}
+}
+nav button{
+  flex:1;padding:14px 8px;background:none;border:none;
+  color:var(--sub);font-size:0.78rem;font-weight:500;cursor:pointer;
+  transition:color var(--transition),border-color var(--transition);
+  border-bottom:2px solid transparent;
+  white-space:nowrap;font-family:inherit;
+}
+nav button.active{color:var(--gold);border-bottom-color:var(--gold)}
+nav button:hover{color:var(--text)}
+@media(max-width:768px){
+  nav button{border-bottom:none;border-top:2px solid transparent;padding:10px 4px;font-size:0.7rem}
+  nav button.active{border-top-color:var(--gold)}
+}
+
+/* ===== SECTIONS ===== */
+.tab-content{display:none;padding:24px 16px;max-width:960px;margin:0 auto;animation:fadeIn 0.3s ease}
+.tab-content.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ===== FILTER BAR ===== */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.filter-btn{
+  padding:6px 14px;border-radius:20px;border:1px solid var(--border);
+  background:transparent;color:var(--sub);font-size:0.75rem;cursor:pointer;
+  transition:all var(--transition);font-family:inherit;
+}
+.filter-btn:hover{border-color:var(--gold);color:var(--text)}
+.filter-btn.active{background:var(--gold);color:#0a0a0a;border-color:var(--gold);font-weight:600}
+
+/* ===== CARDS ===== */
+.card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+@media(max-width:640px){.card-grid{grid-template-columns:1fr}}
+.card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;cursor:pointer;transition:all var(--transition);position:relative;
+}
+.card:hover{transform:translateY(-2px);border-color:#3a3a3a;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+.card .num{font-size:1.4rem;margin-right:8px;opacity:0.7}
+.card .name{font-size:1rem;font-weight:600;color:var(--text)}
+.card .structure{font-size:0.8rem;color:var(--sub);margin-top:6px}
+.badge{
+  display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.65rem;font-weight:700;
+  margin-left:8px;vertical-align:middle;
+}
+.badge.tier-a{background:rgba(200,169,126,0.2);color:var(--gold);border:1px solid var(--gold)}
+.badge.tier-b{background:rgba(160,160,160,0.15);color:var(--silver);border:1px solid var(--silver)}
+.badge.tier-c{background:rgba(139,105,20,0.15);color:var(--bronze);border:1px solid var(--bronze)}
+.stars{font-size:0.7rem;margin-left:4px}
+
+/* ===== ACCORDION DETAIL ===== */
+.card-detail{
+  max-height:0;overflow:hidden;transition:max-height 0.4s ease,padding 0.3s ease;
+  border-top:0 solid var(--border);margin-top:0;
+}
+.card.open .card-detail{max-height:2000px;padding-top:16px;margin-top:12px;border-top-width:1px}
+.detail-section{margin-bottom:14px}
+.detail-label{font-size:0.7rem;color:var(--gold);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px}
+.detail-text{font-size:0.82rem;color:var(--sub);line-height:1.7}
+.detail-code{
+  background:#111;border:1px solid var(--border);border-radius:6px;
+  padding:10px 14px;font-family:'Fira Code',monospace;font-size:0.78rem;color:var(--gold);
+  word-break:break-all;margin-top:4px;
+}
+.tag{
+  display:inline-block;padding:3px 10px;border-radius:12px;font-size:0.68rem;
+  background:rgba(200,169,126,0.1);color:var(--gold);border:1px solid rgba(200,169,126,0.2);
+  margin:3px 4px 3px 0;
+}
+
+/* ===== TAB2: FINDER ===== */
+.finder-mode{display:flex;gap:8px;margin-bottom:24px}
+.finder-mode button{
+  flex:1;padding:12px;border-radius:var(--radius);border:1px solid var(--border);
+  background:var(--card);color:var(--sub);cursor:pointer;font-family:inherit;
+  font-size:0.85rem;font-weight:500;transition:all var(--transition);
+}
+.finder-mode button.active{border-color:var(--gold);color:var(--gold)}
+
+.flow-box{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:28px 24px;text-align:center;
+}
+.flow-q{font-size:0.75rem;color:var(--mute);margin-bottom:8px}
+.flow-question{font-size:1.1rem;font-weight:600;margin-bottom:24px;line-height:1.5}
+.flow-btns{display:flex;gap:12px;justify-content:center}
+.flow-btns button{
+  padding:12px 36px;border-radius:var(--radius);border:1px solid var(--border);
+  background:transparent;color:var(--text);cursor:pointer;font-family:inherit;
+  font-size:0.9rem;font-weight:500;transition:all var(--transition);
+}
+.flow-btns button.yes{border-color:var(--gold);color:var(--gold)}
+.flow-btns button.yes:hover{background:var(--gold);color:#0a0a0a}
+.flow-btns button.no:hover{background:#333}
+
+.result-card{
+  background:var(--card);border:1px solid var(--gold);border-radius:var(--radius);
+  padding:24px;margin-top:20px;
+}
+.result-card .rc-title{font-size:1.1rem;font-weight:700;color:var(--gold);margin-bottom:8px}
+.result-card .rc-desc{font-size:0.85rem;color:var(--sub);margin-bottom:16px;line-height:1.6}
+.go-gen-btn{
+  padding:10px 20px;background:var(--gold);color:#0a0a0a;border:none;border-radius:var(--radius);
+  font-weight:600;cursor:pointer;font-family:inherit;font-size:0.85rem;transition:all var(--transition);
+}
+.go-gen-btn:hover{background:var(--gold-h)}
+
+.type-select{
+  width:100%;padding:12px 16px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);color:var(--text);font-family:inherit;font-size:0.9rem;
+  cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888'%3E%3Cpath d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;
+}
+.type-select option{background:#1a1a1a;color:#e0e0e0}
+
+.rec-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:16px}
+.rec-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;
+}
+.rec-rank{font-size:0.7rem;color:var(--gold);font-weight:600;margin-bottom:6px}
+.rec-name{font-size:1rem;font-weight:600;margin-bottom:6px}
+.rec-reason{font-size:0.8rem;color:var(--sub);margin-bottom:14px;line-height:1.5}
+
+/* ===== TAB3: PLAN ===== */
+.status-summary{
+  display:flex;gap:12px;margin-bottom:20px;flex-wrap:wrap;
+}
+.status-item{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:12px 20px;text-align:center;flex:1;min-width:100px;
+}
+.status-num{font-size:1.6rem;font-weight:700}
+.status-label{font-size:0.7rem;color:var(--sub);margin-top:2px}
+.status-item.done .status-num{color:#4caf50}
+.status-item.wip .status-num{color:#ff9800}
+.status-item.todo .status-num{color:var(--mute)}
+
+.dist-chart{margin-bottom:24px}
+.dist-row{display:flex;align-items:center;margin-bottom:6px}
+.dist-label{width:100px;font-size:0.75rem;color:var(--sub);flex-shrink:0}
+.dist-bar-wrap{flex:1;height:18px;background:#111;border-radius:4px;overflow:hidden}
+.dist-bar{height:100%;border-radius:4px;transition:width 0.5s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px}
+.dist-bar span{font-size:0.6rem;font-weight:700;color:#0a0a0a}
+
+.plan-table{width:100%;border-collapse:collapse}
+.plan-table th{
+  text-align:left;padding:10px 12px;font-size:0.7rem;color:var(--mute);
+  border-bottom:1px solid var(--border);font-weight:600;text-transform:uppercase;
+  letter-spacing:0.05em;white-space:nowrap;
+}
+.plan-table td{
+  padding:10px 12px;font-size:0.8rem;border-bottom:1px solid #151515;
+  color:var(--sub);vertical-align:middle;
+}
+.plan-table tr:hover td{background:rgba(200,169,126,0.03)}
+.plan-table .insight-name{color:var(--text);font-weight:500}
+@media(max-width:768px){
+  .plan-table-wrap{display:none}
+  .plan-cards{display:block}
+}
+@media(min-width:769px){
+  .plan-cards{display:none}
+}
+.plan-card{
+  background:var(--card);border:1px solid var(--border);border-radius:var(--radius);
+  padding:16px;margin-bottom:10px;
+}
+.plan-card .pc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.plan-card .pc-name{font-weight:600;font-size:0.9rem}
+.plan-card .pc-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.plan-card .pc-item{font-size:0.75rem;color:var(--sub)}
+.plan-card .pc-item span{color:var(--text)}
+
+/* ===== TAB4: GENERATOR ===== */
+.gen-motto{
+  text-align:center;font-size:1rem;color:var(--gold);font-weight:500;
+  margin-bottom:28px;padding:16px;border:1px solid var(--border);
+  border-radius:var(--radius);background:var(--card);font-style:italic;
+}
+.step{margin-bottom:24px}
+.step-header{
+  display:flex;align-items:center;gap:10px;margin-bottom:12px;
+}
+.step-num{
+  width:28px;height:28px;border-radius:50%;background:var(--gold);color:#0a0a0a;
+  display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;flex-shrink:0;
+}
+.step-title{font-size:0.9rem;font-weight:600}
+
+.tech-select-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+@media(max-width:480px){.tech-select-grid{grid-template-columns:1fr}}
+.tech-opt{
+  padding:12px;border:1px solid var(--border);border-radius:var(--radius);
+  cursor:pointer;transition:all var(--transition);background:var(--card);
+}
+.tech-opt:hover{border-color:#444}
+.tech-opt.selected{border-color:var(--gold);background:rgba(200,169,126,0.08)}
+.tech-opt .to-num{font-size:1.1rem;margin-right:6px}
+.tech-opt .to-name{font-size:0.85rem;font-weight:500}
+.tech-opt .to-tier{float:right}
+
+.gen-input{
+  width:100%;padding:12px 16px;background:var(--card);border:1px solid var(--border);
+  border-radius:var(--radius);color:var(--text);font-family:inherit;font-size:0.9rem;
+}
+.gen-input:focus{outline:none;border-color:var(--gold)}
+.gen-input::placeholder{color:var(--mute)}
+
+.option-group{display:flex;gap:8px;flex-wrap:wrap}
+.opt-btn{
+  padding:8px 16px;border:1px solid var(--border);border-radius:var(--radius);
+  background:var(--card);color:var(--sub);cursor:pointer;font-family:inherit;
+  font-size:0.8rem;transition:all var(--transition);
+}
+.opt-btn.selected{border-color:var(--gold);color:var(--gold);background:rgba(200,169,126,0.08)}
+.opt-btn:hover{border-color:#444}
+
+.generate-btn{
+  width:100%;padding:16px;background:var(--gold);color:#0a0a0a;border:none;
+  border-radius:var(--radius);font-size:1rem;font-weight:700;cursor:pointer;
+  font-family:inherit;transition:all var(--transition);margin-top:8px;
+}
+.generate-btn:hover{background:var(--gold-h)}
+.generate-btn:disabled{opacity:0.4;cursor:not-allowed}
+
+.prompt-result{
+  background:#111;border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;margin-top:20px;position:relative;display:none;
+}
+.prompt-result.show{display:block}
+.prompt-result pre{
+  white-space:pre-wrap;word-break:break-all;font-size:0.82rem;line-height:1.8;
+  color:var(--gold);font-family:'Fira Code',monospace;
+}
+.copy-btn{
+  position:absolute;top:12px;right:12px;padding:6px 14px;
+  background:var(--gold);color:#0a0a0a;border:none;border-radius:6px;
+  font-size:0.72rem;font-weight:600;cursor:pointer;font-family:inherit;
+}
+.copy-btn:hover{background:var(--gold-h)}
+
+.checklist{margin-top:24px}
+.checklist h3{font-size:0.85rem;font-weight:600;margin-bottom:12px;color:var(--text)}
+.check-item{
+  display:flex;align-items:center;gap:8px;padding:6px 0;
+  font-size:0.8rem;color:var(--sub);
+}
+.check-item input[type=checkbox]{accent-color:var(--gold);width:16px;height:16px}
+
+/* ===== FOOTER ===== */
+footer{
+  text-align:center;padding:40px 16px;font-size:0.72rem;color:var(--mute);
+  border-top:1px solid var(--border);
+}
+
+/* ===== TOAST ===== */
+#toast{
+  position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--gold);color:#0a0a0a;padding:10px 24px;border-radius:20px;
+  font-size:0.82rem;font-weight:600;opacity:0;transition:all 0.3s ease;
+  z-index:999;pointer-events:none;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(min-width:769px){#toast{bottom:40px}}
+
+/* ===== UTIL ===== */
+.mt-8{margin-top:8px}.mt-16{margin-top:16px}.mt-24{margin-top:24px}
+.mb-16{margin-bottom:16px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>There Image</h1>
+  <p class="sub">thereafter</p>
+</header>
+
+<nav id="nav">
+  <button class="active" onclick="switchTab(0)">기법 사전</button>
+  <button onclick="switchTab(1)">기법 선택기</button>
+  <button onclick="switchTab(2)">기획표</button>
+  <button onclick="switchTab(3)">프롬프트 생성기</button>
+</nav>
+
+<!-- ==================== TAB 1: 기법 사전 ==================== -->
+<section class="tab-content active" id="tab0">
+  <div class="filter-bar" id="tier-filter"></div>
+  <div class="card-grid" id="tech-grid"></div>
+</section>
+
+<!-- ==================== TAB 2: 기법 선택기 ==================== -->
+<section class="tab-content" id="tab1">
+  <div class="finder-mode">
+    <button class="active" onclick="setFinderMode('flow')">플로우차트</button>
+    <button onclick="setFinderMode('type')">유형별 추천</button>
+  </div>
+  <div id="finder-flow">
+    <div class="flow-box" id="flow-box"></div>
+  </div>
+  <div id="finder-type" class="hidden">
+    <select class="type-select" id="type-select" onchange="onTypeSelect()">
+      <option value="">인사이트 유형을 선택하세요</option>
+    </select>
+    <div class="rec-cards" id="rec-cards"></div>
+  </div>
+</section>
+
+<!-- ==================== TAB 3: 기획표 ==================== -->
+<section class="tab-content" id="tab2">
+  <div class="status-summary" id="status-summary"></div>
+  <div class="filter-bar" id="plan-filter"></div>
+  <div class="dist-chart" id="dist-chart"></div>
+  <div class="plan-table-wrap"><table class="plan-table" id="plan-table"></table></div>
+  <div class="plan-cards" id="plan-cards"></div>
+</section>
+
+<!-- ==================== TAB 4: 프롬프트 생성기 ==================== -->
+<section class="tab-content" id="tab3">
+  <div class="gen-motto">"수상작은 분위기가 아니라 트릭이다"</div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">1</div><div class="step-title">기법 선택</div></div>
+    <div class="tech-select-grid" id="gen-tech-grid"></div>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">2</div><div class="step-title">A (오브제) 입력</div></div>
+    <input class="gen-input" id="inputA" placeholder="예: 커피잔, 운동화, 종이봉투...">
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">3</div><div class="step-title">B (변환) 입력</div></div>
+    <input class="gen-input" id="inputB" placeholder="예: 용암, 구름, 유리, 숲...">
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">4</div><div class="step-title">옵션 선택</div></div>
+    <div class="mb-16">
+      <div class="detail-label">배경색</div>
+      <div class="option-group" id="bg-opts">
+        <button class="opt-btn selected" onclick="selectOpt('bg','dark',this)">Dark</button>
+        <button class="opt-btn" onclick="selectOpt('bg','white',this)">White</button>
+        <button class="opt-btn" onclick="selectOpt('bg','custom',this)">Custom</button>
+      </div>
+      <input class="gen-input mt-8 hidden" id="bg-custom" placeholder="배경색 입력 (예: deep navy, warm beige)">
+    </div>
+    <div class="mb-16">
+      <div class="detail-label">비율</div>
+      <div class="option-group" id="ar-opts">
+        <button class="opt-btn selected" onclick="selectOpt('ar','3:4',this)">3:4</button>
+        <button class="opt-btn" onclick="selectOpt('ar','16:9',this)">16:9</button>
+        <button class="opt-btn" onclick="selectOpt('ar','1:1',this)">1:1</button>
+        <button class="opt-btn" onclick="selectOpt('ar','2:3',this)">2:3</button>
+      </div>
+    </div>
+    <div>
+      <div class="detail-label">슬라이드</div>
+      <div class="option-group" id="slide-opts">
+        <button class="opt-btn selected" onclick="selectOpt('slide','03P',this)">03P</button>
+        <button class="opt-btn" onclick="selectOpt('slide','05P',this)">05P</button>
+        <button class="opt-btn" onclick="selectOpt('slide','07P',this)">07P</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-header"><div class="step-num">5</div><div class="step-title">프롬프트 생성</div></div>
+    <button class="generate-btn" id="gen-btn" onclick="generatePrompt()">프롬프트 생성하기</button>
+  </div>
+
+  <div class="prompt-result" id="prompt-result">
+    <button class="copy-btn" onclick="copyPrompt()">복사</button>
+    <pre id="prompt-text"></pre>
+  </div>
+
+  <div class="checklist" id="checklist"></div>
+</section>
+
+<footer>
+  &copy; 2025 thereafter. 발견은 There, 실행은 After
+</footer>
+
+<div id="toast"></div>
+
+<script>
+// ===================================================================
+// DATA: 10 TECHNIQUES
+// ===================================================================
+const TECHNIQUES = [
+  {
+    id:1, num:'①', name:'오브제 합성', tier:'A', stars:5,
+    structure:'A와 B 두 오브제를 하나의 물체로 자연스럽게 합성',
+    desc:'두 개의 서로 다른 오브제를 물리적으로 하나로 합친다. 커피잔이 화산이 되고, 운동화가 도시가 된다. 가장 직관적이면서 강력한 임팩트를 만드는 기법.',
+    successCondition:'두 오브제의 경계가 자연스럽게 녹아들어, "원래 하나였던 것처럼" 보여야 한다',
+    failRisk:'단순 포토샵 합성처럼 보이면 실패. 이음새가 부자연스러우면 아마추어 콜라주가 된다',
+    examples:['커피잔 + 화산 = 잔 위에서 용암이 흐르는 커피','운동화 + 도시 = 신발 밑창이 스카이라인으로 변환','종이봉투 + 숲 = 봉투를 열면 숲이 펼쳐짐'],
+    promptKeywords:['seamlessly merging into','growing out of','transforming from A into B','hybrid object','organic fusion'],
+    suitableTypes:['본질반전','이질적융합','재해석/변환']
+  },
+  {
+    id:2, num:'②', name:'스케일 반전', tier:'A', stars:5,
+    structure:'거대한 것을 작게, 작은 것을 거대하게 크기 역전',
+    desc:'일상적 크기 관계를 뒤집어 낯설음을 만든다. 사람보다 큰 커피잔, 손바닥 위의 빌딩. 스케일 충격이 곧 인사이트의 힘이 된다.',
+    successCondition:'비교 대상이 함께 등장하여 크기 대비가 극명해야 한다',
+    failRisk:'비교 기준 없이 단독 배치하면 크기 반전이 느껴지지 않는다',
+    examples:['손바닥 위의 초고층 빌딩','사람보다 큰 동전 앞에 서 있는 비즈니스맨','컵 안에 들어가 수영하는 사람'],
+    promptKeywords:['miniature','giant','tiny person next to massive','oversized','macro perspective of tiny'],
+    suitableTypes:['스케일/규모','본질반전','숨겨진가치']
+  },
+  {
+    id:3, num:'③', name:'물질 변환', tier:'A', stars:5,
+    structure:'A의 형태는 유지하되 재질/텍스처를 B로 완전 변환',
+    desc:'물체의 실루엣은 그대로인데 재질이 전혀 다른 것으로 바뀐다. 유리로 된 운동화, 용암으로 된 책. 형태와 재질의 불일치가 시각적 긴장을 만든다.',
+    successCondition:'원래 형태가 즉시 인식되면서도 재질의 이질감이 강렬해야 한다',
+    failRisk:'재질 변환이 미미하면 그냥 색상 변경처럼 보인다',
+    examples:['유리로 만든 운동화 (내부 구조 투시)','용암 재질의 책 (표면에서 불꽃)','대리석 재질의 종이컵'],
+    promptKeywords:['made entirely of','texture of B on shape of A','material transformation','crystalline','molten'],
+    suitableTypes:['재해석/변환','본질반전','숨겨진가치']
+  },
+  {
+    id:4, num:'④', name:'해체 재조립', tier:'B', stars:4,
+    structure:'A를 조각내어 B의 형태로 재구성',
+    desc:'하나의 오브제를 파편, 입자, 조각으로 분해한 뒤 전혀 다른 형태로 재조립한다. 파괴와 창조가 한 프레임에 공존한다.',
+    successCondition:'해체 중인 과정이 포착되어야 한다. 완전 해체도 완전 조립도 아닌 "중간 순간"이 핵심',
+    failRisk:'완전히 부서진 잔해만 보이면 파괴 이미지가 되고, 완성되면 평범한 오브제가 된다',
+    examples:['스마트폰이 나비 떼로 분해되는 순간','책의 글자들이 새 떼가 되어 날아가는 장면','건물이 레고 블록으로 해체/재조립되는 과정'],
+    promptKeywords:['disintegrating into','exploding into particles of','reassembling from fragments','deconstructing','morphing pieces'],
+    suitableTypes:['재해석/변환','이질적융합','관점전환']
+  },
+  {
+    id:5, num:'⑤', name:'시점 전환', tier:'B', stars:4,
+    structure:'예상치 못한 앵글/시점에서 포착하여 새로운 의미 부여',
+    desc:'위에서, 아래에서, 내부에서, 단면에서. 같은 대상도 시점이 바뀌면 전혀 다른 이야기가 된다.',
+    successCondition:'한 눈에 "이건 ○○를 ○○에서 본 것"이라고 알아챌 수 있어야 한다',
+    failRisk:'너무 추상적이면 무엇을 보는지 모르고, 너무 평범하면 새로울 게 없다',
+    examples:['커피잔을 정확히 위에서 내려다본 뷰 (우주처럼 보임)','신발 밑창의 극단적 단면도','빌딩을 개미 시점에서 올려다본 앵글'],
+    promptKeywords:['birds eye view','cross section','worms eye view','inside looking out','isometric cutaway'],
+    suitableTypes:['관점전환','일상속발견','숨겨진가치']
+  },
+  {
+    id:6, num:'⑥', name:'시간 대비', tier:'B', stars:4,
+    structure:'같은 대상의 과거/현재/미래를 한 프레임에 대비',
+    desc:'시간의 흐름을 한 장의 이미지에 압축한다. 왼쪽은 과거, 오른쪽은 미래. 혹은 하나의 물체가 시간에 따라 변하는 과정을 보여준다.',
+    successCondition:'시간 흐름의 방향과 대비가 명확해야 한다',
+    failRisk:'시간 개념이 불분명하면 그냥 두 개의 다른 물건처럼 보인다',
+    examples:['왼쪽: 묘목 → 오른쪽: 거목 (같은 나무의 시간)','새 운동화가 점진적으로 닳아가는 연속 프레임','빈 노트북이 빼곡한 노트가 되는 과정'],
+    promptKeywords:['time lapse in single frame','before and after','aging process','evolution of','progression from new to worn'],
+    suitableTypes:['본질반전','관점전환','스케일/규모']
+  },
+  {
+    id:7, num:'⑦', name:'공간 왜곡', tier:'C', stars:3,
+    structure:'물리 법칙을 무시한 불가능한 공간 구성',
+    desc:'에셔의 계단처럼 물리적으로 불가능한 공간을 만든다. 중력 무시, 차원 왜곡, 불가능한 구조. 초현실주의의 힘.',
+    successCondition:'"불가능한데 그럴듯하다"는 느낌이 들어야 한다. 포토리얼하되 비현실적',
+    failRisk:'너무 추상적이면 메시지 전달이 안 되고, 너무 사실적이면 왜곡이 안 느껴진다',
+    examples:['에셔식 불가능한 계단 위의 상점','물이 위로 흐르는 분수대','안과 밖이 뒤집힌 방'],
+    promptKeywords:['impossible architecture','Escher-like','gravity defying','paradoxical space','non-euclidean'],
+    suitableTypes:['관점전환','이질적융합','재해석/변환']
+  },
+  {
+    id:8, num:'⑧', name:'미니멀 상징', tier:'C', stars:3,
+    structure:'핵심 하나만 남기고 모든 요소를 제거한 극단적 여백',
+    desc:'90%를 비우고 10%의 핵심만 남긴다. 여백이 곧 메시지가 되는 극단적 미니멀리즘. 광활한 빈 공간에 단 하나의 오브제.',
+    successCondition:'남겨진 하나의 요소가 충분히 강력하여 여백을 지배해야 한다',
+    failRisk:'핵심 오브제가 약하면 그냥 빈 이미지, 허전한 사진이 된다',
+    examples:['순백 공간에 놓인 단 하나의 빨간 의자','거대한 어둠 속 작은 불빛 하나','텅 빈 사막 한가운데 문 하나'],
+    promptKeywords:['vast negative space','single object in emptiness','minimalist composition','solitary','stark contrast with void'],
+    suitableTypes:['미니멀/상징','본질반전','숨겨진가치']
+  },
+  {
+    id:9, num:'⑨', name:'이질적 병치', tier:'B', stars:4,
+    structure:'전혀 어울리지 않는 A와 B를 같은 공간에 나란히 배치',
+    desc:'합성하지 않고, 변환하지 않고, 그저 나란히 둔다. 그 부조화가 메시지가 된다. 사막 위의 서핑보드, 빙하 위의 에스프레소 머신.',
+    successCondition:'두 요소가 각각 독립적으로 인식되면서도 병치의 의도가 느껴져야 한다',
+    failRisk:'관계가 너무 모호하면 무작위 콜라주로 보인다',
+    examples:['사막 한가운데 놓인 그랜드 피아노','빙하 위의 에스프레소 머신','폐허 위에 핀 한 송이 꽃'],
+    promptKeywords:['placed in unexpected environment','juxtaposition of','contrasting elements side by side','out of context','surreal placement'],
+    suitableTypes:['이질적융합','관점전환','일상속발견']
+  },
+  {
+    id:10, num:'⑩', name:'극단적 클로즈업', tier:'C', stars:3,
+    structure:'육안으로 볼 수 없는 극도의 확대로 새로운 세계 발견',
+    desc:'현미경 수준으로 확대하면 일상의 물체가 외계 행성이 된다. 커피 표면의 거품이 은하가 되고, 직물의 올이 숲이 된다.',
+    successCondition:'무엇을 확대한 것인지 맥락 단서가 있으면서도, 확대된 세계 자체가 독립적 아름다움을 가져야 한다',
+    failRisk:'원본이 뭔지 전혀 모르면 추상 이미지가 되고, 너무 명확하면 그냥 접사 사진이다',
+    examples:['커피 표면 거품의 극단적 확대 (행성 표면처럼)','직물 올의 마이크로 뷰 (숲처럼 보임)','손끝 지문의 극확대 (미로/계곡처럼)'],
+    promptKeywords:['extreme macro','microscopic view','hyper close-up revealing','cellular level detail','macro photography of surface'],
+    suitableTypes:['일상속발견','숨겨진가치','스케일/규모']
+  }
+];
+
+// ===================================================================
+// DATA: TYPE MATRIX (8 insight types → recommended techniques)
+// ===================================================================
+const TYPE_MATRIX = {
+  '본질반전':     {recs:[{id:1,reason:'두 본질을 합성하여 반전 시각화'},{id:3,reason:'재질 변환으로 본질의 이면을 드러냄'},{id:8,reason:'극단적 여백으로 본질만 남김'}]},
+  '관점전환':     {recs:[{id:5,reason:'시점 자체를 물리적으로 전환'},{id:7,reason:'공간 구조를 왜곡하여 새 관점 제시'},{id:9,reason:'맥락 병치로 관점 충돌 유도'}]},
+  '숨겨진가치':   {recs:[{id:3,reason:'재질 변환으로 숨겨진 본질 드러냄'},{id:10,reason:'극확대로 보이지 않던 가치 발견'},{id:2,reason:'스케일 반전으로 작은 것의 거대한 가치 표현'}]},
+  '일상속발견':   {recs:[{id:10,reason:'일상 오브제를 극확대하여 재발견'},{id:5,reason:'일상을 새로운 시점에서 포착'},{id:9,reason:'일상 오브제를 낯선 맥락에 배치'}]},
+  '이질적융합':   {recs:[{id:1,reason:'이질적 요소를 하나로 합성'},{id:9,reason:'이질적 요소를 나란히 병치'},{id:4,reason:'해체 후 이질적 형태로 재조립'}]},
+  '스케일/규모':  {recs:[{id:2,reason:'크기 반전으로 스케일 직접 시각화'},{id:6,reason:'시간 스케일을 한 프레임에 압축'},{id:10,reason:'마이크로 스케일로의 전환'}]},
+  '재해석/변환':  {recs:[{id:3,reason:'재질 변환 = 재해석의 직접 시각화'},{id:4,reason:'해체 재조립 = 변환 과정 포착'},{id:1,reason:'합성으로 새로운 해석 제시'}]},
+  '미니멀/상징':  {recs:[{id:8,reason:'미니멀 기법 그 자체'},{id:2,reason:'단일 오브제의 스케일 극대화'},{id:5,reason:'극단적 시점으로 상징성 강화'}]}
+};
+
+// ===================================================================
+// DATA: FLOWCHART QUESTIONS
+// ===================================================================
+const FLOWCHART_QS = [
+  {q:'두 개의 오브제를 하나로 합쳐서 새로운 의미를 만들 수 있나요?', techId:1},
+  {q:'크기를 극단적으로 키우거나 줄여서 충격을 줄 수 있나요?', techId:2},
+  {q:'오브제의 재질/질감을 바꿔서 본질을 드러낼 수 있나요?', techId:3},
+  {q:'오브제를 해체하고 다른 형태로 재조립할 수 있나요?', techId:4},
+  {q:'평소와 다른 각도/시점에서 보면 새로운 의미가 생기나요?', techId:5},
+  {q:'과거와 현재(또는 미래)를 한 프레임에 대비할 수 있나요?', techId:6},
+  {q:'물리 법칙을 무시한 불가능한 공간이 메시지를 강화하나요?', techId:7},
+  {q:'모든 것을 빼고 딱 하나만 남겨도 메시지가 전달되나요?', techId:8},
+  {q:'전혀 어울리지 않는 두 요소를 나란히 놓으면 메시지가 되나요?', techId:9},
+  {q:'극단적으로 확대하면 새로운 세계가 보이나요?', techId:10}
+];
+
+// ===================================================================
+// DATA: 50+1 PLAN
+// ===================================================================
+const PLAN_DATA = [
+  {id:1,name:'지울 수 없는 진심',brand:'안성기 손편지',technique:1,objectA:'손편지',transformB:'용암/불꽃 잉크',slide:'05P',status:'🔲',track:'Track01'},
+  {id:2,name:'셀프 환대',brand:'최화정',technique:3,objectA:'은수저',transformB:'크리스탈/보석',slide:'05P',status:'🔲',track:'Track02'},
+  {id:3,name:'로컬의 중력',brand:'성심당',technique:2,objectA:'빵집',transformB:'블랙홀/중력장',slide:'05P',status:'🔲',track:'Track01'},
+  {id:4,name:'지금 아니면 없다',brand:'ZARA',technique:6,objectA:'매장 선반',transformB:'모래시계 모래',slide:'05P',status:'🔲',track:'Track03'},
+  {id:5,name:'먹는 곳이 아닌 있는 곳',brand:'런던베이글뮤지엄',technique:7,objectA:'베이글 가게',transformB:'미술관 갤러리',slide:'05P',status:'🔲',track:'Track03'},
+  {id:6,name:'뮤지엄이라 부르는 순간',brand:'런던베이글뮤지엄',technique:3,objectA:'베이글',transformB:'대리석/브론즈',slide:'03P',status:'🔲',track:'Track03'},
+  {id:7,name:'매장이 아닌 사건',brand:'ZARA',technique:9,objectA:'옷걸이',transformB:'레드카펫/무대',slide:'05P',status:'🔲',track:'Track03'},
+  {id:8,name:'완벽한 기본',brand:'유니클로',technique:8,objectA:'흰 티셔츠',transformB:'순백 공간',slide:'03P',status:'🔲',track:'Track01'},
+  {id:9,name:'옷장이 아닌 유니폼',brand:'유니클로',technique:1,objectA:'옷장',transformB:'군복/제복',slide:'05P',status:'🔲',track:'Track02'},
+  {id:10,name:'보이지 않는 기술',brand:'유니클로',technique:10,objectA:'히트텍 원단',transformB:'분자/나노 구조',slide:'05P',status:'🔲',track:'Track01'},
+  {id:11,name:'계절을 파는 가게',brand:'유니클로',technique:6,objectA:'매장',transformB:'사계절 풍경',slide:'05P',status:'🔲',track:'Track01'},
+  {id:12,name:'빠지는 것의 미학',brand:'유니클로',technique:8,objectA:'옷',transformB:'투명/소멸',slide:'03P',status:'🔲',track:'Track01'},
+  {id:13,name:'못생긴 밑창의 역습',brand:'ON',technique:5,objectA:'운동화 밑창',transformB:'달 표면/크레이터',slide:'05P',status:'🔲',track:'Track01'},
+  {id:14,name:'주인공을 죽여도 세계는 산다',brand:'주토피아/디즈니',technique:4,objectA:'캐릭터',transformB:'우주/은하 파편',slide:'05P',status:'🔲',track:'Track01'},
+  {id:15,name:'선택지가 3개뿐인 마트',brand:'코스트코',technique:2,objectA:'마트 선반',transformB:'3개만 남은 거대 선반',slide:'05P',status:'🔲',track:'Track02'},
+  {id:16,name:'메뉴가 3개뿐인 버거집',brand:'인앤아웃',technique:8,objectA:'메뉴판',transformB:'미니멀 3줄',slide:'03P',status:'🔲',track:'Track01'},
+  {id:17,name:'안 하는 버거집',brand:'인앤아웃',technique:9,objectA:'햄버거',transformB:'75년 타임캡슐',slide:'05P',status:'🔲',track:'Track02'},
+  {id:18,name:'시크릿 메뉴가 더 유명한 가게',brand:'인앤아웃',technique:5,objectA:'메뉴판',transformB:'숨겨진 문/금고',slide:'05P',status:'🔲',track:'Track02'},
+  {id:19,name:'컨시어지가 있는 서점',brand:'츠타야',technique:9,objectA:'서점',transformB:'호텔 로비',slide:'05P',status:'🔲',track:'Track02'},
+  {id:20,name:'50대만 오는 서점',brand:'츠타야',technique:2,objectA:'서점',transformB:'거대한 돋보기',slide:'05P',status:'🔲',track:'Track02'},
+  {id:21,name:'3개의 법칙',brand:'심리학/범용',technique:8,objectA:'선택지',transformB:'3개의 문',slide:'03P',status:'🔲',track:'Track01'},
+  {id:22,name:'신발이 아닌 선수를 판다',brand:'나이키',technique:1,objectA:'운동화',transformB:'선수의 발/근육',slide:'05P',status:'🔲',track:'Track02'},
+  {id:23,name:'집도 회사도 아닌 곳',brand:'스타벅스',technique:7,objectA:'카페',transformB:'차원 사이 공간',slide:'05P',status:'🔲',track:'Track01'},
+  {id:24,name:'주방이 카운터 앞에',brand:'치폴레',technique:5,objectA:'주방',transformB:'유리/투명벽',slide:'05P',status:'🔲',track:'Track01'},
+  {id:25,name:'종이봉투에 철학을 쓰는 식당',brand:'치폴레',technique:3,objectA:'종이봉투',transformB:'양피지/고서적',slide:'05P',status:'🔲',track:'Track02'},
+  {id:26,name:'집주인이 고객보다 중요',brand:'에어비앤비',technique:2,objectA:'집주인',transformB:'거대한 왕관',slide:'05P',status:'🔲',track:'Track02'},
+  {id:27,name:'호텔이 아닌 경험',brand:'에어비앤비',technique:1,objectA:'호텔 열쇠',transformB:'여권/모험 도구',slide:'05P',status:'🔲',track:'Track01'},
+  {id:28,name:'영상 속 남자가 튀어나왔다',brand:'청룡영화상',technique:7,objectA:'스크린',transformB:'깨진 유리/현실',slide:'05P',status:'🔲',track:'Track03'},
+  {id:29,name:'상 못 받았는데 가장 화제',brand:'박정민',technique:9,objectA:'트로피',transformB:'SNS 말풍선',slide:'05P',status:'🔲',track:'Track02'},
+  {id:30,name:'숫자가 아닌 구름',brand:'ON',technique:3,objectA:'운동화',transformB:'구름/솜',slide:'03P',status:'🔲',track:'Track03'},
+  {id:31,name:'완벽한 통역, 통하지 않는 것',brand:'AI 통역',technique:4,objectA:'번역기',transformB:'깨진 하트/감정 파편',slide:'05P',status:'🔲',track:'Track03'},
+  {id:32,name:'나도 저래',brand:'러브미',technique:10,objectA:'영화 장면',transformB:'관객의 눈물 클로즈업',slide:'03P',status:'🔲',track:'Track02'},
+  {id:33,name:'물인데, 맥주캔',brand:'리퀴드 데스',technique:3,objectA:'물병',transformB:'해골/메탈',slide:'03P',status:'🔲',track:'Track03'},
+  {id:34,name:'선생님이 아닌 올빼미',brand:'두올링고',technique:1,objectA:'교과서',transformB:'올빼미/게임기',slide:'05P',status:'🔲',track:'Track02'},
+  {id:35,name:'새로운 게 아닌, 이미 하던 거',brand:'크래프트하인즈',technique:10,objectA:'마요네즈+치즈',transformB:'소비자 냉장고 내부',slide:'05P',status:'🔲',track:'Track03'},
+  {id:36,name:'잠만 자도 사게 됩니다',brand:'MUJI Hotel',technique:7,objectA:'호텔 객실',transformB:'MUJI 매장',slide:'05P',status:'🔲',track:'Track03'},
+  {id:37,name:'쓰레기가 20만원',brand:'FREITAG',technique:4,objectA:'방수포/트럭 덮개',transformB:'명품 가방',slide:'05P',status:'🔲',track:'Track01'},
+  {id:38,name:'사지 마세요',brand:'파타고니아',technique:9,objectA:'재킷',transformB:'"Don\'t Buy" 표지판',slide:'05P',status:'🔲',track:'Track01'},
+  {id:39,name:'화면 밖으로 나왔다',brand:'Netflix House',technique:7,objectA:'TV 화면',transformB:'실제 세트장',slide:'05P',status:'🔲',track:'Track03'},
+  {id:40,name:'빈 종이 한 장이 13조',brand:'Notion',technique:8,objectA:'빈 종이',transformB:'거대한 금고',slide:'05P',status:'🔲',track:'Track03'},
+  {id:41,name:'10시간 29분 통화',brand:'Zappos',technique:6,objectA:'전화기',transformB:'녹아내리는 시계',slide:'05P',status:'🔲',track:'Track02'},
+  {id:42,name:'카페가 있는 옷가게가 아닙니다',brand:'ARKET',technique:1,objectA:'옷가게',transformB:'카페/주방',slide:'05P',status:'🔲',track:'Track03'},
+  {id:43,name:'비싼 가격이 콘텐츠',brand:'Erewhon',technique:2,objectA:'스무디 컵',transformB:'금괴/다이아몬드',slide:'03P',status:'🔲',track:'Track03'},
+  {id:44,name:'좌석을 없앴더니 3만 개',brand:'루이싱커피',technique:4,objectA:'카페 의자',transformB:'스마트폰 픽셀',slide:'05P',status:'🔲',track:'Track03'},
+  {id:45,name:'백화점이 화성으로',brand:'SKP-S',technique:7,objectA:'백화점',transformB:'화성 표면/우주',slide:'05P',status:'🔲',track:'Track03'},
+  {id:46,name:'뭐가 들었는지 모릅니다',brand:'POP MART',technique:5,objectA:'블라인드 박스',transformB:'?로 가려진 내부',slide:'05P',status:'🔲',track:'Track03'},
+  {id:47,name:'메뉴판이 없습니다',brand:'% Arabica',technique:8,objectA:'카페',transformB:'텅 빈 순백 공간',slide:'03P',status:'🔲',track:'Track03'},
+  {id:48,name:'차 의식을 없앤 찻집',brand:'Tea\'stone',technique:6,objectA:'다도 세트',transformB:'칵테일 바',slide:'05P',status:'🔲',track:'Track03'},
+  {id:49,name:'3㎡에서도 품질 일관성',brand:'Fisheye',technique:10,objectA:'커피 머신',transformB:'회로기판/데이터',slide:'05P',status:'🔲',track:'Track03'},
+  {id:50,name:'이벤트 시스템',brand:'Moncler Genius',technique:4,objectA:'패딩 재킷',transformB:'만화경/프리즘 파편',slide:'05P',status:'🔲',track:'Track03'},
+  {id:51,name:'BECA 인사이트',brand:'thereafter',technique:1,objectA:'인사이트 카드',transformB:'프리즘/빛 스펙트럼',slide:'07P',status:'🔲',track:'BECA'}
+];
+
+// ===================================================================
+// DATA: PROMPT TEMPLATES
+// ===================================================================
+const PROMPT_TEMPLATES = {
+  1: `A {A} seamlessly merging into {B}, the two objects forming one impossible hybrid. The transition between {A} and {B} is organic and natural, as if they were always one object. Studio lighting, {background} background, photorealistic product photography --ar {ar} --no text, no letters, no words, no signs, no watermark, no logo --s 750 --q 2`,
+  2: `A giant oversized {A} towering over a tiny {B}, dramatic scale reversal creating visual tension. The size contrast is extreme and striking. Cinematic composition, {background} background, hyper-realistic --ar {ar} --no text, no letters, no words, no signs, no watermark, no logo --s 750 --q 2`,
+  3: `A {A} with the exact original shape but made entirely of {B} material. The texture and material of {B} is rendered in extreme detail on the form of {A}. Studio product shot, {background} background, photorealistic --ar {ar} --no text, no letters, no words, no signs, no watermark, no logo --s 750 --q 2`,
+  4: `A {A} in the process of disintegrating and reassembling into the shape of {B}. Fragments and particles float mid-air, caught between destruction and creation. Dynamic frozen moment, {background} background, cinematic lighting --ar {ar} --no text, no letters, no words, no signs, no watermark, no logo --s 750 --q 2`,
+  5: `A {A} photographed from an extreme unexpected angle revealing it looks like {B}. The perspective shift creates a completely new meaning. {background} background, editorial photography, sharp detail --ar {ar} --no text, no letters, no words, no signs, no watermark, no logo --s 750 --q 2`,
+  6: `A single frame showing {A} transitioning through time into {B}. Left side shows the beginning state, right side shows the transformed state. The progression is smooth and continuous. {background} background, conceptual photography --ar {ar} --no text, no letters, no words, no signs, no watermark, no logo --s 750 --q 2`,
+  7: `An impossible space where {A} exists inside a gravity-defying {B} environment. Architecture and physics are surreal, Escher-like. The space feels real yet impossible. {background} background, architectural photography --ar {ar} --no text, no letters, no words, no signs, no watermark, no logo --s 750 --q 2`,
+  8: `A single {A} placed in vast empty {background} space. Extreme minimalism, 90% negative space. The solitary object commands all attention through its isolation. Clean, stark, powerful. Minimalist art photography --ar {ar} --no text, no letters, no words, no signs, no watermark, no logo --s 750 --q 2`,
+  9: `A {A} placed in the completely unexpected environment of {B}. The two elements are side by side, not merged, creating surreal juxtaposition. The contrast between {A} and {B} tells a story. {background} background, fine art photography --ar {ar} --no text, no letters, no words, no signs, no watermark, no logo --s 750 --q 2`,
+  10:`An extreme macro close-up of {A} surface revealing it looks like {B} at microscopic level. Hyper-detailed texture, the familiar becomes alien and beautiful. {background} background, macro photography, shallow depth of field --ar {ar} --no text, no letters, no words, no signs, no watermark, no logo --s 750 --q 2`
+};
+
+const COMMON_RULES = [
+  'No text, letters, words 금지 확인',
+  'No signs, watermark, logo 금지 확인',
+  'A와 B가 명확히 표현되었는지 확인',
+  '배경색이 의도대로 설정되었는지 확인',
+  '비율(ar)이 슬라이드 용도에 맞는지 확인',
+  '--s 750 --q 2 스타일/퀄리티 파라미터 확인',
+  '프롬프트 영어로 작성되었는지 확인'
+];
+
+// ===================================================================
+// STATE
+// ===================================================================
+let activeTab = 0;
+let tierFilter = 'all';
+let flowStep = 0;
+let finderMode = 'flow';
+let selectedTech = null;
+let genOpts = { bg:'dark', ar:'3:4', slide:'03P' };
+let planFilters = { technique:'all', track:'all', status:'all' };
+
+// ===================================================================
+// TAB CONTROL
+// ===================================================================
+function switchTab(idx) {
+  activeTab = idx;
+  document.querySelectorAll('.tab-content').forEach((el,i) => {
+    el.classList.toggle('active', i === idx);
+  });
+  document.querySelectorAll('nav button').forEach((el,i) => {
+    el.classList.toggle('active', i === idx);
+  });
+}
+
+// ===================================================================
+// TAB 1: TECHNIQUE DICTIONARY
+// ===================================================================
+function renderTierFilter() {
+  const c = document.getElementById('tier-filter');
+  c.innerHTML = `
+    <button class="filter-btn ${tierFilter==='all'?'active':''}" onclick="setTier('all')">전체</button>
+    <button class="filter-btn ${tierFilter==='A'?'active':''}" onclick="setTier('A')">A ★★★★★</button>
+    <button class="filter-btn ${tierFilter==='B'?'active':''}" onclick="setTier('B')">B ★★★★</button>
+    <button class="filter-btn ${tierFilter==='C'?'active':''}" onclick="setTier('C')">C ★★★</button>
+  `;
+}
+
+function setTier(t) {
+  tierFilter = t;
+  renderTierFilter();
+  renderTechniques();
+}
+
+function renderTechniques() {
+  const grid = document.getElementById('tech-grid');
+  const filtered = tierFilter === 'all' ? TECHNIQUES : TECHNIQUES.filter(t => t.tier === tierFilter);
+  grid.innerHTML = filtered.map(t => `
+    <div class="card" id="tech-card-${t.id}" onclick="toggleDetail(${t.id})">
+      <div>
+        <span class="num">${t.num}</span>
+        <span class="name">${t.name}</span>
+        <span class="badge tier-${t.tier.toLowerCase()}">${t.tier}</span>
+        <span class="stars">${'★'.repeat(t.stars)}</span>
+      </div>
+      <div class="structure">${t.structure}</div>
+      <div class="card-detail">
+        <div class="detail-section">
+          <div class="detail-label">설명</div>
+          <div class="detail-text">${t.desc}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">성공 조건</div>
+          <div class="detail-text">${t.successCondition}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">실패 위험</div>
+          <div class="detail-text">${t.failRisk}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">검증 사례</div>
+          <div class="detail-text">${t.examples.map(e=>'• '+e).join('<br>')}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">MJ 프롬프트 키워드</div>
+          <div class="detail-code">${t.promptKeywords.join(', ')}</div>
+        </div>
+        <div class="detail-section">
+          <div class="detail-label">적합한 인사이트 유형</div>
+          <div>${t.suitableTypes.map(s=>'<span class="tag">'+s+'</span>').join('')}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleDetail(id) {
+  const card = document.getElementById('tech-card-' + id);
+  card.classList.toggle('open');
+}
+
+// ===================================================================
+// TAB 2: TECHNIQUE FINDER
+// ===================================================================
+function setFinderMode(mode) {
+  finderMode = mode;
+  document.querySelectorAll('.finder-mode button').forEach((el,i) => {
+    el.classList.toggle('active', (i===0 && mode==='flow') || (i===1 && mode==='type'));
+  });
+  document.getElementById('finder-flow').classList.toggle('hidden', mode !== 'flow');
+  document.getElementById('finder-type').classList.toggle('hidden', mode !== 'type');
+  if (mode === 'flow') startFlow();
+}
+
+function startFlow() {
+  flowStep = 0;
+  renderFlowStep();
+}
+
+function renderFlowStep() {
+  const box = document.getElementById('flow-box');
+  if (flowStep >= FLOWCHART_QS.length) {
+    const fallback = TECHNIQUES[0];
+    box.innerHTML = `
+      <div class="flow-q">모든 질문 완료</div>
+      <div class="flow-question">조합이 어려운 경우, 가장 범용적인 기법을 추천합니다</div>
+      <div class="result-card">
+        <div class="rc-title">${fallback.num} ${fallback.name}</div>
+        <div class="rc-desc">${fallback.desc}</div>
+        <button class="go-gen-btn" onclick="goToGenerator(${fallback.id})">프롬프트 생성기로 이동 →</button>
+      </div>
+      <button class="filter-btn mt-16" onclick="startFlow()">다시 시작</button>
+    `;
+    return;
+  }
+  const fq = FLOWCHART_QS[flowStep];
+  box.innerHTML = `
+    <div class="flow-q">Q${flowStep+1} / ${FLOWCHART_QS.length}</div>
+    <div class="flow-question">${fq.q}</div>
+    <div class="flow-btns">
+      <button class="yes" onclick="answerFlow(true)">Yes</button>
+      <button class="no" onclick="answerFlow(false)">No</button>
+    </div>
+  `;
+}
+
+function answerFlow(yes) {
+  if (yes) {
+    const fq = FLOWCHART_QS[flowStep];
+    const tech = TECHNIQUES.find(t => t.id === fq.techId);
+    const box = document.getElementById('flow-box');
+    box.innerHTML = `
+      <div class="flow-q">Q${flowStep+1} 결과</div>
+      <div class="result-card">
+        <div class="rc-title">${tech.num} ${tech.name}</div>
+        <div class="rc-desc">${tech.desc}</div>
+        <button class="go-gen-btn" onclick="goToGenerator(${tech.id})">프롬프트 생성기로 이동 →</button>
+      </div>
+      <button class="filter-btn mt-16" onclick="startFlow()">다시 시작</button>
+    `;
+  } else {
+    flowStep++;
+    renderFlowStep();
+  }
+}
+
+function renderTypeSelect() {
+  const sel = document.getElementById('type-select');
+  const types = Object.keys(TYPE_MATRIX);
+  types.forEach(t => {
+    const opt = document.createElement('option');
+    opt.value = t; opt.textContent = t;
+    sel.appendChild(opt);
+  });
+}
+
+function onTypeSelect() {
+  const type = document.getElementById('type-select').value;
+  const container = document.getElementById('rec-cards');
+  if (!type) { container.innerHTML = ''; return; }
+  const recs = TYPE_MATRIX[type].recs;
+  container.innerHTML = recs.map((r,i) => {
+    const tech = TECHNIQUES.find(t => t.id === r.id);
+    return `
+      <div class="rec-card">
+        <div class="rec-rank">${i+1}순위 추천</div>
+        <div class="rec-name">${tech.num} ${tech.name} <span class="badge tier-${tech.tier.toLowerCase()}">${tech.tier}</span></div>
+        <div class="rec-reason">${r.reason}</div>
+        <button class="go-gen-btn" onclick="goToGenerator(${tech.id})">프롬프트 생성기로 이동 →</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function goToGenerator(techId) {
+  switchTab(3);
+  selectTechnique(techId);
+}
+
+// ===================================================================
+// TAB 3: PLAN TABLE
+// ===================================================================
+function renderStatusSummary() {
+  const done = PLAN_DATA.filter(p => p.status === '✅').length;
+  const wip = PLAN_DATA.filter(p => p.status === '🔄').length;
+  const todo = PLAN_DATA.filter(p => p.status === '🔲').length;
+  document.getElementById('status-summary').innerHTML = `
+    <div class="status-item done"><div class="status-num">${done}</div><div class="status-label">완료 ✅</div></div>
+    <div class="status-item wip"><div class="status-num">${wip}</div><div class="status-label">진행중 🔄</div></div>
+    <div class="status-item todo"><div class="status-num">${todo}</div><div class="status-label">미착수 🔲</div></div>
+  `;
+}
+
+function renderPlanFilter() {
+  const c = document.getElementById('plan-filter');
+  // technique filter
+  let html = '<button class="filter-btn '+(planFilters.technique==='all'?'active':'')+'" onclick="setPlanFilter(\'technique\',\'all\')">전체 기법</button>';
+  for(let i=1;i<=10;i++){
+    const t = TECHNIQUES[i-1];
+    html += `<button class="filter-btn ${planFilters.technique==i?'active':''}" onclick="setPlanFilter('technique',${i})">${t.num}</button>`;
+  }
+  // track filter
+  const tracks = [...new Set(PLAN_DATA.map(p=>p.track))].sort();
+  html += '<span style="width:8px"></span>';
+  html += '<button class="filter-btn '+(planFilters.track==='all'?'active':'')+'" onclick="setPlanFilter(\'track\',\'all\')">전체 트랙</button>';
+  tracks.forEach(tr => {
+    html += `<button class="filter-btn ${planFilters.track===tr?'active':''}" onclick="setPlanFilter('track','${tr}')">${tr}</button>`;
+  });
+  // status filter
+  html += '<span style="width:8px"></span>';
+  html += '<button class="filter-btn '+(planFilters.status==='all'?'active':'')+'" onclick="setPlanFilter(\'status\',\'all\')">전체 상태</button>';
+  ['✅','🔄','🔲'].forEach(s => {
+    html += `<button class="filter-btn ${planFilters.status===s?'active':''}" onclick="setPlanFilter('status','${s}')">${s}</button>`;
+  });
+  c.innerHTML = html;
+}
+
+function setPlanFilter(key, val) {
+  planFilters[key] = val;
+  renderPlanFilter();
+  renderPlan();
+}
+
+function getFilteredPlan() {
+  return PLAN_DATA.filter(p => {
+    if (planFilters.technique !== 'all' && p.technique !== planFilters.technique) return false;
+    if (planFilters.track !== 'all' && p.track !== planFilters.track) return false;
+    if (planFilters.status !== 'all' && p.status !== planFilters.status) return false;
+    return true;
+  });
+}
+
+function renderDistChart() {
+  const counts = {};
+  TECHNIQUES.forEach(t => counts[t.id] = 0);
+  PLAN_DATA.forEach(p => { if(counts[p.technique]!==undefined) counts[p.technique]++; });
+  const max = Math.max(...Object.values(counts), 1);
+  const colors = {A:'var(--gold)',B:'var(--silver)',C:'var(--bronze)'};
+  document.getElementById('dist-chart').innerHTML = TECHNIQUES.map(t => {
+    const cnt = counts[t.id];
+    const pct = (cnt/max*100).toFixed(0);
+    return `<div class="dist-row">
+      <div class="dist-label">${t.num} ${t.name}</div>
+      <div class="dist-bar-wrap">
+        <div class="dist-bar" style="width:${pct}%;background:${colors[t.tier]}"><span>${cnt}</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderPlan() {
+  const data = getFilteredPlan();
+  // Table (desktop)
+  const table = document.getElementById('plan-table');
+  table.innerHTML = `<thead><tr>
+    <th>#</th><th>인사이트명</th><th>브랜드</th><th>기법</th>
+    <th>A(오브제)</th><th>B(변환)</th><th>슬라이드</th><th>상태</th>
+  </tr></thead><tbody>${data.map(p => {
+    const tech = TECHNIQUES.find(t=>t.id===p.technique);
+    return `<tr>
+      <td>${p.id}</td>
+      <td class="insight-name">${p.name}</td>
+      <td>${p.brand}</td>
+      <td>${tech?tech.num+' '+tech.name:'-'}</td>
+      <td>${p.objectA}</td>
+      <td>${p.transformB}</td>
+      <td>${p.slide}</td>
+      <td>${p.status}</td>
+    </tr>`;
+  }).join('')}</tbody>`;
+
+  // Cards (mobile)
+  const cards = document.getElementById('plan-cards');
+  cards.innerHTML = data.map(p => {
+    const tech = TECHNIQUES.find(t=>t.id===p.technique);
+    return `<div class="plan-card">
+      <div class="pc-top">
+        <div class="pc-name">${p.id}. ${p.name}</div>
+        <div>${p.status}</div>
+      </div>
+      <div class="pc-row">
+        <div class="pc-item">브랜드 <span>${p.brand}</span></div>
+        <div class="pc-item">기법 <span>${tech?tech.num+tech.name:'-'}</span></div>
+      </div>
+      <div class="pc-row">
+        <div class="pc-item">A <span>${p.objectA}</span></div>
+        <div class="pc-item">B <span>${p.transformB}</span></div>
+        <div class="pc-item">${p.slide}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ===================================================================
+// TAB 4: PROMPT GENERATOR
+// ===================================================================
+function renderGenTechGrid() {
+  const grid = document.getElementById('gen-tech-grid');
+  grid.innerHTML = TECHNIQUES.map(t => `
+    <div class="tech-opt ${selectedTech===t.id?'selected':''}" onclick="selectTechnique(${t.id})">
+      <span class="to-num">${t.num}</span>
+      <span class="to-name">${t.name}</span>
+      <span class="to-tier badge tier-${t.tier.toLowerCase()}">${t.tier}</span>
+    </div>
+  `).join('');
+}
+
+function selectTechnique(id) {
+  selectedTech = id;
+  renderGenTechGrid();
+}
+
+function selectOpt(group, val, el) {
+  genOpts[group] = val;
+  el.parentElement.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  if (group === 'bg') {
+    document.getElementById('bg-custom').classList.toggle('hidden', val !== 'custom');
+  }
+}
+
+function generatePrompt() {
+  if (!selectedTech) { showToast('기법을 선택하세요'); return; }
+  const a = document.getElementById('inputA').value.trim();
+  const b = document.getElementById('inputB').value.trim();
+  if (!a) { showToast('A(오브제)를 입력하세요'); return; }
+  if (!b) { showToast('B(변환)를 입력하세요'); return; }
+
+  let bg = genOpts.bg;
+  if (bg === 'custom') {
+    bg = document.getElementById('bg-custom').value.trim() || 'dark';
+  }
+
+  let template = PROMPT_TEMPLATES[selectedTech];
+  const prompt = template
+    .replace(/\{A\}/g, a)
+    .replace(/\{B\}/g, b)
+    .replace(/\{background\}/g, bg)
+    .replace(/\{ar\}/g, genOpts.ar);
+
+  document.getElementById('prompt-text').textContent = prompt;
+  document.getElementById('prompt-result').classList.add('show');
+  renderChecklist();
+  showToast('프롬프트가 생성되었습니다');
+}
+
+function copyPrompt() {
+  const text = document.getElementById('prompt-text').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('복사 완료!');
+  }).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = text; document.body.appendChild(ta);
+    ta.select(); document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('복사 완료!');
+  });
+}
+
+function renderChecklist() {
+  const cl = document.getElementById('checklist');
+  cl.innerHTML = '<h3>공통 규칙 체크리스트</h3>' +
+    COMMON_RULES.map((r,i) => `
+      <label class="check-item">
+        <input type="checkbox" id="chk-${i}"> ${r}
+      </label>
+    `).join('');
+}
+
+// ===================================================================
+// UTILITY
+// ===================================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ===================================================================
+// INIT
+// ===================================================================
+function init() {
+  renderTierFilter();
+  renderTechniques();
+  startFlow();
+  renderTypeSelect();
+  renderStatusSummary();
+  renderPlanFilter();
+  renderDistChart();
+  renderPlan();
+  renderGenTechGrid();
+}
+
+init();
+</script>
+</body>
+</html>
