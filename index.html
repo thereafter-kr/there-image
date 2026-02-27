@@ -20,20 +20,32 @@
 /* ===== PASSWORD GATE ===== */
 #gate{
   position:fixed;inset:0;z-index:9999;
-  background:#867d6a;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:#8e8675;
+  display:flex;align-items:center;justify-content:center;padding:20px;
 }
 #gate.hidden{display:none}
-#gate h1{font-size:1.6rem;font-weight:700;color:#ece5d5;letter-spacing:0.05em;margin-bottom:4px}
-#gate .gate-sub{font-size:0.8rem;color:#c4b99f;letter-spacing:0.1em;font-weight:300;margin-bottom:32px}
-#gate input{
-  width:260px;padding:14px 18px;background:#c4b99f;border:1px solid #a89f8a;
-  border-radius:8px;color:#2a2520;font-family:inherit;font-size:0.95rem;
-  text-align:center;letter-spacing:0.1em;
+.gate-box{
+  background:#f5f1e8;border-radius:16px;padding:48px 40px;
+  max-width:380px;width:100%;text-align:center;
+  box-shadow:0 8px 32px rgba(42,37,32,0.15);
 }
-#gate input:focus{outline:none;border-color:#E8913A}
-#gate input::placeholder{color:#7a7264;letter-spacing:0.05em}
-#gate .gate-err{color:#E8913A;font-size:0.78rem;margin-top:12px;min-height:1.2em}
+.gate-box .gate-brand{font-size:11px;letter-spacing:3px;color:#7a7264;text-transform:uppercase;margin-bottom:8px}
+.gate-box h1{font-size:22px;font-weight:700;color:#2a2520;margin-bottom:4px}
+.gate-box .gate-desc{font-size:13px;color:#7a7264;margin-bottom:32px}
+.gate-box input{
+  width:100%;padding:14px 16px;border:1.5px solid #a89f8a;
+  border-radius:10px;font-size:15px;background:#ece5d5;
+  color:#2a2520;outline:none;text-align:center;font-family:inherit;
+}
+.gate-box input:focus{border-color:#e8943a}
+.gate-box input::placeholder{color:#7a7264}
+.gate-box .gate-btn{
+  width:100%;padding:14px;margin-top:14px;border:none;border-radius:10px;
+  background:#e8943a;color:#f5f1e8;font-size:15px;font-weight:500;
+  cursor:pointer;font-family:inherit;transition:background 0.2s;
+}
+.gate-box .gate-btn:hover{background:#d47e28}
+.gate-box .gate-err{color:#c0392b;font-size:13px;margin-top:10px;min-height:18px}
 html{scroll-behavior:smooth}
 body{
   background:var(--bg);color:var(--text);
@@ -341,10 +353,14 @@ footer{
 <body>
 
 <div id="gate">
-  <h1>There Image</h1>
-  <p class="gate-sub">thereafter</p>
-  <input type="password" id="gate-pw" placeholder="비밀번호 입력" autofocus>
-  <p class="gate-err" id="gate-err"></p>
+  <div class="gate-box">
+    <div class="gate-brand">THEREAFTER</div>
+    <h1>There Image</h1>
+    <p class="gate-desc">이미지 생산 시스템</p>
+    <input type="password" id="gate-pw" placeholder="비밀번호" autofocus>
+    <button class="gate-btn" onclick="tryGate()">접속</button>
+    <p class="gate-err" id="gate-err"></p>
+  </div>
 </div>
 
 <header>
@@ -1083,17 +1099,20 @@ if (sessionStorage.getItem('ti_auth') === '1') {
   gateEl.classList.add('hidden');
 }
 
-gatePwInput.addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') {
-    const val = gatePwInput.value.trim();
-    if (val === GATE_PW) {
-      sessionStorage.setItem('ti_auth', '1');
-      gateEl.classList.add('hidden');
-    } else {
-      gateErr.textContent = '접근 권한이 없습니다.';
-      gatePwInput.value = '';
-    }
+function tryGate() {
+  const val = gatePwInput.value.trim();
+  if (val === GATE_PW) {
+    sessionStorage.setItem('ti_auth', '1');
+    gateEl.classList.add('hidden');
+  } else {
+    gateErr.textContent = '비밀번호가 일치하지 않습니다';
+    gatePwInput.value = '';
+    gatePwInput.focus();
   }
+}
+
+gatePwInput.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') tryGate();
 });
 
 // ===================================================================
